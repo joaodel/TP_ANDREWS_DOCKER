@@ -69,9 +69,13 @@ docker compose down
 
 ### 1. Verificação da estrutura
 
-Inicialmente, conferimos a disposição dos diretórios e arquivos utilizando o comando `ls -R`.
+Inicialmente, conferimos a disposição dos diretórios e arquivos utilizando o comando `tree /f`.
 
 Essa verificação permitiu identificar os arquivos responsáveis pela página HTML, pela configuração do Docker Compose e pela implementação da API.
+<img width="597" height="410" alt="print 1" src="https://github.com/user-attachments/assets/ba84fe70-12d6-4a6c-8899-dae9c8491ec8" />
+
+
+
 
 ### 2. Criação da imagem do site
 
@@ -80,10 +84,12 @@ Para gerar uma imagem própria para o serviço web, executamos:
 ```bash
 docker build --no-cache -t site-tp:1.0 .
 ```
-
+<img width="754" height="739" alt="print 2" src="https://github.com/user-attachments/assets/f90e7a5e-dfae-4bf4-b7a0-b0d49aa7774b" />
 O processo utiliza o `nginx:alpine` como imagem de origem e adiciona o arquivo `index.html` ao diretório padrão de publicação do Nginx.
 
 Após a conclusão, utilizamos o comando `docker images` para verificar se a imagem `site-tp:1.0` estava disponível localmente.
+
+<img width="799" height="329" alt="print 3" src="https://github.com/user-attachments/assets/85db3ee5-6882-4c64-8cf4-4e4f1270c940" />
 
 ### 3. Inicialização dos serviços
 
@@ -94,6 +100,8 @@ docker compose up -d --build
 ```
 
 Durante essa operação, o Docker realiza o build das imagens, estabelece uma rede para a comunicação interna e inicializa os containers `app-api` e `site-nginx`.
+<img width="1708" height="802" alt="print 4" src="https://github.com/user-attachments/assets/377eaa89-8afe-4995-8419-2c69758beea6" />
+
 
 Para acompanhar a situação dos serviços, utilizamos:
 
@@ -102,6 +110,8 @@ docker compose ps
 ```
 
 O comando permite conferir se os containers estão em execução e verificar o mapeamento das portas 8080 e 8081.
+<img width="1062" height="108" alt="print 5" src="https://github.com/user-attachments/assets/75767a2b-ce9f-4537-a225-460aecf1c444" />
+
 
 ### 4. Realização dos testes
 
@@ -110,10 +120,15 @@ Para verificar se os serviços estavam respondendo corretamente, realizamos requ
 ```bash
 curl localhost:8080 && curl localhost:8081
 ```
+<img width="1472" height="486" alt="print 6" src="https://github.com/user-attachments/assets/8eb21d6e-914d-4764-83dd-376776b1c7cc" />
+
 
 Com esse teste, foi possível validar o retorno HTML fornecido pelo Nginx e a resposta JSON produzida pela API em Go.
 
 Também realizamos a conferência pelo navegador. Ao acessar a porta 8080, a página apresenta os dados recebidos da API. Já na porta 8081, é possível visualizar diretamente o conteúdo JSON retornado pelo serviço.
+<img width="1909" height="808" alt="print 7" src="https://github.com/user-attachments/assets/c879bfd5-eac4-4180-b155-011f191e5d5d" />
+
+
 
 ### 5. Inspeção dos containers
 
@@ -124,6 +139,7 @@ docker compose logs
 ```
 
 Por meio desse comando, conseguimos acompanhar as mensagens geradas pelo Nginx e pela API, incluindo a informação de inicialização do serviço na porta 3000 dentro do container.
+<img width="1727" height="811" alt="print 8" src="https://github.com/user-attachments/assets/c792bde9-c76a-4d4d-bb2b-67914eaa5d38" />
 
 Eventuais mensagens relacionadas ao favicon não representam falhas na aplicação, pois o navegador tenta localizar automaticamente um ícone para a página, que não foi incluído no projeto.
 
@@ -132,6 +148,7 @@ Também acessamos o ambiente interno do container do site utilizando:
 ```bash
 docker compose exec site sh
 ```
+<img width="1530" height="659" alt="print 9" src="https://github.com/user-attachments/assets/142ab232-646e-46fa-b088-253ea7174791" />
 
 Dentro do container, verificamos o diretório `/usr/share/nginx/html`, responsável por armazenar os arquivos disponibilizados pelo servidor Nginx, confirmando a presença do `index.html`.
 
@@ -148,6 +165,7 @@ Em seguida, executamos novamente:
 ```bash
 docker compose ps
 ```
+<img width="734" height="217" alt="print 10" src="https://github.com/user-attachments/assets/85135234-b647-426e-90af-42bc95a70aad" />
 
 A consulta permitiu confirmar que os containers e a rede associados à aplicação haviam sido removidos.
 
@@ -159,3 +177,6 @@ Durante a implementação, alguns detalhes foram importantes para garantir a com
 - **Configuração de CORS:** adicionamos o cabeçalho HTTP `Access-Control-Allow-Origin` na API para permitir as requisições originadas pelo site. Essa configuração foi necessária porque os dois serviços são acessados por portas diferentes, caracterizando origens distintas.
 
 Com a conclusão dos testes, conseguimos validar a execução conjunta dos serviços, a disponibilização da página pelo Nginx e a integração entre o frontend e a API desenvolvida em Go.
+
+
+
